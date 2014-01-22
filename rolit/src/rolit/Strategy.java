@@ -5,6 +5,6 @@ import java.util.LinkedList;
 public interface Strategy {
 	
 	public String getName();
-	public LinkedList<Integer> determineMove(Board b, Mark m);
+	public LinkedList<Integer> determineMove(Board b, Mark1 m);
 
 }

@@ -15,7 +15,7 @@ public class Board {
 	
 	// -- Instance variables -----------------------------------------
 	
-	private Mark[] fields;
+	private Mark1[] fields;
 	LinkedList<LinkedList<Integer>> aanliggendeVelden = new LinkedList<LinkedList<Integer>>();
 	LinkedList<LinkedList<Integer>> veldenMetSlaMogelijkheid = new LinkedList<LinkedList<Integer>>();
 
@@ -23,7 +23,7 @@ public class Board {
 	// -- Constructors -----------------------------------------------
 	
 	public Board(){
-		fields = new Mark[DIM * DIM];
+		fields = new Mark1[DIM * DIM];
 		reset();
 	}
 	
@@ -43,14 +43,14 @@ public class Board {
 	}
 	
 	// returnt het mark dat bij het veld hoort
-	public Mark getField(int col, int row){
+	public Mark1 getField(int col, int row){
 		return fields[index(col, row)];
 	}
 	
 	// returnt true als veld leeg is
 	// returnt false als een veld een kleur heeft.
 	public boolean isEmptyField(int col, int row){
-		return getField(col, row) == Mark.EMPTY;
+		return getField(col, row) == Mark1.EMPTY;
 	}
 	
 	// returnt true als het bord vol is
@@ -67,7 +67,7 @@ public class Board {
 		return result;
 	}
 	
-	public int aantalMark(Mark m){
+	public int aantalMark(Mark1 m){
 		int aantalMark = 0;
 		for (int col = 0; col < DIM; col++){
 			for (int row = 0; row < DIM; row++){
@@ -88,23 +88,23 @@ public class Board {
 	// 
 	
 	
-	public boolean isWinner(Mark m){
+	public boolean isWinner(Mark1 m){
 		boolean winner = false;
-		int aantalRood = aantalMark(Mark.ROOD);
-		int aantalGeel = aantalMark(Mark.GEEL);
-		int aantalGroen = aantalMark(Mark.GROEN);
-		int aantalBlauw = aantalMark(Mark.BLAUW);
+		int aantalRood = aantalMark(Mark1.ROOD);
+		int aantalGeel = aantalMark(Mark1.GEEL);
+		int aantalGroen = aantalMark(Mark1.GROEN);
+		int aantalBlauw = aantalMark(Mark1.BLAUW);
 		if(isFull()){
-			if(m.equals(Mark.ROOD) && aantalRood >= aantalGeel && aantalRood >= aantalGroen && aantalRood >= aantalBlauw){
+			if(m.equals(Mark1.ROOD) && aantalRood >= aantalGeel && aantalRood >= aantalGroen && aantalRood >= aantalBlauw){
 				winner = true;
 			}
-			if(m.equals(Mark.GEEL) && aantalGeel >= aantalRood && aantalGeel >= aantalGroen && aantalGeel >= aantalBlauw){
+			if(m.equals(Mark1.GEEL) && aantalGeel >= aantalRood && aantalGeel >= aantalGroen && aantalGeel >= aantalBlauw){
 				winner = true;
 			}
-			if(m.equals(Mark.GROEN) && aantalGroen >= aantalRood && aantalGroen >= aantalGeel && aantalGroen >= aantalBlauw){
+			if(m.equals(Mark1.GROEN) && aantalGroen >= aantalRood && aantalGroen >= aantalGeel && aantalGroen >= aantalBlauw){
 				winner = true;
 			}
-			if(m.equals(Mark.BLAUW) && aantalBlauw >= aantalRood && aantalBlauw >= aantalGeel && aantalBlauw >= aantalGroen){
+			if(m.equals(Mark1.BLAUW) && aantalBlauw >= aantalRood && aantalBlauw >= aantalGeel && aantalBlauw >= aantalGroen){
 				winner = true;
 			}	
 		} 
@@ -112,12 +112,12 @@ public class Board {
 	}
 	
 	public boolean hasWinner(){
-		return isWinner(Mark.ROOD) || isWinner(Mark.GEEL) || isWinner(Mark.GROEN) || isWinner(Mark.BLAUW);
+		return isWinner(Mark1.ROOD) || isWinner(Mark1.GEEL) || isWinner(Mark1.GROEN) || isWinner(Mark1.BLAUW);
 	}
 	
 	// returnt true als gekozen veld aanliggend is en in dien mogelijk slaat
 	// returnt false wanneer gekozen veld
-	public boolean isValidMove(int col, int row, Mark m){
+	public boolean isValidMove(int col, int row, Mark1 m){
 		boolean validMove = false;
 		activeFields(m);
 		if(veldenMetSlaMogelijkheid.size() == 0){
@@ -149,20 +149,20 @@ public class Board {
 	public void reset(){
 		for (int col = 0; col < DIM; col++){
 			for (int row = 0; row < DIM; row++){
-				setField(col, row, Mark.EMPTY);
+				setField(col, row, Mark1.EMPTY);
 			}
 		}
-		setField(3, 3, Mark.ROOD);
-		setField(4, 3, Mark.GEEL);
-		setField(3, 4, Mark.BLAUW);
-		setField(4, 4, Mark.GROEN);
+		setField(3, 3, Mark1.ROOD);
+		setField(4, 3, Mark1.GEEL);
+		setField(3, 4, Mark1.BLAUW);
+		setField(4, 4, Mark1.GROEN);
 	}
 
-	public void setField(int col, int row, Mark m){
+	public void setField(int col, int row, Mark1 m){
 		fields[index(col, row)] = m;
 	}
 
-	public LinkedList<LinkedList<Integer>> activeFields(Mark m){
+	public LinkedList<LinkedList<Integer>> activeFields(Mark1 m){
 		while (!aanliggendeVelden.isEmpty()) {
 	        aanliggendeVelden.removeFirst();
 	    }
@@ -335,7 +335,7 @@ public class Board {
 		return  veldenMetSlaMogelijkheid;
 	}	
 	
-	public void recolorFields(int x, int y, Mark m){
+	public void recolorFields(int x, int y, Mark1 m){
 		if(isValidMove(x, y, m)){
 			boolean empty = false;
 			boolean maakSlag = false;

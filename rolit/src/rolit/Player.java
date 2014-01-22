@@ -7,7 +7,7 @@ public abstract class Player {
 	// -- Instance variables -----------------------------------------
 
     private String name;
-    private Mark mark;
+    private Mark1 mark;
     
     
 
@@ -15,7 +15,7 @@ public abstract class Player {
     
     
     // Creates a new Player
-    public Player(String theName, Mark theMark) {
+    public Player(String theName, Mark1 theMark) {
         this.name = theName;
         this.mark = theMark;
     }
@@ -31,7 +31,7 @@ public abstract class Player {
     }
 
     // Returns the mark of the player.
-    public Mark getMark() {
+    public Mark1 getMark() {
         return mark;
     }
     

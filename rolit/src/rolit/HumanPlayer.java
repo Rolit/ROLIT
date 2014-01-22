@@ -7,7 +7,7 @@ public class HumanPlayer extends Player{
 	
 	// -- Constructors -----------------------------------------------
 
-    public HumanPlayer(String name, Mark mark) {
+    public HumanPlayer(String name, Mark1 mark) {
         super(name, mark);
     }
 

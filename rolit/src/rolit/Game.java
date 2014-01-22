@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Game {
 	// -- Instance variables -----------------------------------------
 
-    public static final int NUMBER_PLAYERS = 2;
+    public static final int NUMBER_PLAYERS = 4;
     
     private Board board;
     
