@@ -53,25 +53,6 @@ public enum Mark1 {
 		}
 		return nextColor;
 	}
-		
-			
-	
-//	public boolean isOtherMark(Board b, int col, int row){
-//		if (this == ROOD && (b.getField(col, row) == GEEL || b.getField(col, row) == GROEN || b.getField(col, row) == BLAUW)){
-//			return true;
-//		}
-//		else if (this == GEEL && (b.getField(col, row) == ROOD || b.getField(col, row) == GROEN || b.getField(col, row) == BLAUW)){
-//			return true;
-//		}
-//		else if (this == GROEN && (b.getField(col, row) == ROOD || b.getField(col, row) == GEEL || b.getField(col, row) == BLAUW)){
-//			return true;
-//		}
-//		else if (this == BLAUW && (b.getField(col, row) == ROOD || b.getField(col, row) == GEEL || b.getField(col, row) == GROEN)){
-//			return true;
-//		}
-//		return false;
-//	}
-
 }
 
 
