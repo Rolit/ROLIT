@@ -41,7 +41,7 @@ public enum Mark1 {
 			if(i == 4){
 				nextColor = BLAUW;
 			}
-			else if(i == 3){
+			else if(i == 3 || i == 2){
 				nextColor = ROOD;
 			}	
 		}
