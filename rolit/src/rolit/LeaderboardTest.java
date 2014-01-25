@@ -1,4 +1,4 @@
-package rolit;
+package leaderboard;
 
 public class LeaderboardTest {
 	

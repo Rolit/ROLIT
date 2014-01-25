@@ -1,7 +1,5 @@
-package rolit;
+package leaderboard;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.LinkedList;
 
 public class Leaderboard {
@@ -10,13 +8,13 @@ public class Leaderboard {
 	
 	private static LinkedList<LinkedList<Object>> allPersonScore = new LinkedList<LinkedList<Object>>();
 	private static LinkedList<Object> personScore;
-	public static String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
+	//public static String timeStamp = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(Calendar.getInstance().getTime());
 	
 	//---------------------------------Queries---------------------------------
 	
-	/*Get a list of all the scores of one person
-	* Returns a list of all the scores of the requested person
-	* Returns an empty list if requested person is not found
+	/**Get a list of all the scores of one person
+	* @return list of all the scores of the requested person
+	* @return empty list if requested person is not found
 	*/
 	public LinkedList<LinkedList<Object>> getScoreOnePerson(String person){
 		LinkedList<LinkedList<Object>> scoreOnePerson = new LinkedList<LinkedList<Object>>();
@@ -37,10 +35,9 @@ public class Leaderboard {
 		}
 	}
 	
-	/*Get the list of the top n persons on the leaderboard
-	 * Prints the top n of the leaderboard one by one starting with their place on the leaderboard
-	 * Prints an error if the requested number is larger than the size of the leaderboard
-	 * If the error occurs, the whole leaderboard will be printed
+	/**Get the list of the top n persons on the leaderboard
+	 * @return one score at a time, from the first one up untill the number n in the list.
+	 * @return all scores if n > bestNOfAll.size()
 	 */
 	public void getTopNScore(int n){
 		LinkedList<LinkedList<Object>> bestNOfAll = sortLeaderboard(allPersonScore);
@@ -58,9 +55,9 @@ public class Leaderboard {
 		
 	}
 	
-	/*Get the average score of the requested day
-	 * Returns an integer representing the average score of the requested day
-	 * Returns 0 and an error if the requested day is not found
+	/**Get the average score of the requested day
+	 * @return an integer representing the average score of the requested day
+	 * @return 0 and an error if the requested day is not found
 	 */
 	public int getAverageDayScore(String askedDate){
 		LinkedList<LinkedList<Object>> dayScore = new LinkedList<LinkedList<Object>>();
@@ -86,9 +83,9 @@ public class Leaderboard {
 		}
 	}
 	
-	/*Get list of scores above a certain value
-	 * Returns a list of all the scores above a certain value
-	 * Returns an empty list if there a no scores above the requested value
+	/**Get list of scores above a certain value
+	 * @return a list of all the scores above a certain value
+	 * @return an empty list if there a no scores above the requested value
 	 */
 	public LinkedList<LinkedList<Object>> getScoreAboveValue(int value){
 		LinkedList<LinkedList<Object>> sortedLeaderboard = sortLeaderboard(allPersonScore);
@@ -110,9 +107,9 @@ public class Leaderboard {
 		}
 	}
 	
-	/*Get list of scores under a certain value
-	 * Returns a list of the scores below a certain value
-	 * Returns an empty list if there a no scores below the requested value
+	/**Get list of scores under a certain value
+	 * @return a list of the scores below a certain value
+	 * @return an empty list if there a no scores below the requested value
 	 */
 	public LinkedList<LinkedList<Object>> getScoreUnderValue(int value){
 		LinkedList<LinkedList<Object>> sortedLeaderboard = sortLeaderboard(allPersonScore);
@@ -135,31 +132,31 @@ public class Leaderboard {
 		}
 	}
 		
-	/*Get the number 1 player on the leaderboard
-	 * Returns the number 1 player on the leaderboard
+	/**Get the number 1 player on the leaderboard
+	 * @return the number 1 player on the leaderboard
 	 */
 	public String getBestScorePerson(){
 		LinkedList<LinkedList<Object>> bestOfPersonScore = sortLeaderboard(allPersonScore);
 		return bestOfPersonScore.get(0).toString();
 	}
 	
-	/*Get the score of the last person added to the leaderboard
-	 * Returns the score and name of the last person added to the leaderboard
+	/**Get the score of the last person added to the leaderboard
+	 * @return the score and name of the last person added to the leaderboard
 	 */
 	public String getScorePerson(){
 		return "Added Person Score: " +  personScore.toString();
 	}
 	
-	/*Get the list of all scores on the leaderboard
-	 * Returns the leaderboard as a list of lists
+	/**Get the list of all scores on the leaderboard
+	 * @return the leaderboard as a list of lists
 	 */
 	public String getAllPersonScore(){
 		return allPersonScore.toString();
 	}
 	
-	/*Get the leaderboard sorted by score
-	 * Returns a list of all the scores on the leaderboard sorted by score from high to low
-	 * Returns an error if the leaderboard is empty
+	/**Get the leaderboard sorted by score
+	 * @return a list of all the scores on the leaderboard sorted by score from high to low
+	 * @return an error if the leaderboard is empty
 	 */
 	public String getSortedLeaderboard(){
 		if(allPersonScore.size() == 0){
@@ -175,7 +172,7 @@ public class Leaderboard {
 	
 	//---------------------------------Commands---------------------------------
 	
-	/*
+	/**
 	 * Adds a person to the Leaderboard 
 	 */
 	public void addScorePerson(String name, int score, String date, String time){
@@ -189,7 +186,7 @@ public class Leaderboard {
 		allPersonScore.add(copyList);
 	}
 	
-	/*
+	/**
 	 * Resets the leaderboard by emptying allPersonScore
 	 */
 	public static void reset(){
@@ -198,7 +195,7 @@ public class Leaderboard {
 		}
 	}
 	
-	/*
+	/**
 	 * Sorts the leaderboard by score from high to low
 	 */
 	public static LinkedList<LinkedList<Object>> sortLeaderboard(LinkedList<LinkedList<Object>> list){

@@ -1,0 +1,46 @@
+public class ClientHandler extends ServerProtocol implements Runnable{
+	private final Server server;
+	private final Socket client;
+	private BufferedReader input;
+	private PrintStream output;
+	private final Thread thread;
+
+	private int clientSupports;
+	private String clientVersion;
+	privatte User user;
+	private ServerGame currentGame;
+
+	public ClientHandler(Server server, Socket client) throws IOException{
+		this.server = server;
+		this.client = client;
+		thread = new Thread(this);
+	}
+
+	public int getClientSupports(){
+		return clientSupports;
+	}
+
+	public String getClientVersion(){
+		return clientVersion;
+	}
+
+	public boolean isInGame(){
+		return currentGame != null;
+	}
+
+	public User getUser(){
+		return user;
+	}
+
+	public void start(){
+		thread.start();
+	}
+
+	public synchronized void handshake(int supports, String version) throws IOException{
+		new Command(ServerProtocol.HANDSHAKE, supports, version).writeTo(output);
+	}
+
+	public void handshake(int supports, String version, String nonce)
+
+	public void authOk() t
+}
