@@ -39,10 +39,6 @@ public class BoardTest {
         return errors;
     }
 
-    /**
-     * Sets the instance variable <tt>hotel</tt> to a well-defined initial value.
-     * All test methods should be preceded by a call to this method.
-     */
     public void setUp() {
         // initialisation of password-variable
     	Board b = new Board();
