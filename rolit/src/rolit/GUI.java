@@ -4,85 +4,117 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import java.awt.event.*;
+import java.util.Observable;
+import java.util.Observer;
 
-public class GUI extends JFrame implements ActionListener{
+public class GUI extends JFrame implements Observer{
 	
 	// -- Instance variables -----------------------------------------
 
-	private JLabel  lb; 
-	private Mark1 m = Mark1.ROOD;
-	private Color kleur = Color.RED;
-	private Board board;
+	private JLabel  lb;
+	public JLabel validMoveLabel;
+	private JButton[] buttons;
+	private JButton replay;
 	
 	// -- Constructors -----------------------------------------------
 	
-	public GUI() {
+	public GUI(Game game) {
 	    super("GUI");
-	    init();
-	    board = new Board();
+	    init(game);
 	}
 	
 	// -- Commands ---------------------------------------------------
 	
-	private void init() {
+	private void init(Game game) {
 		 Container c = getContentPane();
 		 c.setLayout(new GridLayout(0,8));
-		 lb = new JLabel("It is ROOD's turn");
-		 
-		 for(int x = 0; x < board.DIM; x++){
-			 for(int y = 0; y < board.DIM; y++){
-				JButton button = new JButton();
+		 buttons = new JButton[64]; 
+		 for(int x = 0; x < Board.DIM; x++){
+			 for(int y = 0; y < Board.DIM; y++){
+				int ind = Board.index(x, y);
+				buttons[ind] = new JButton();
 				if(x == 3 && y == 3){
-					button.setBackground(Color.RED);
+                    buttons[ind].setBackground(Color.RED);
+                    buttons[ind].setEnabled(false);
 				}
 				else if(x == 4 && y == 3){
-					button.setBackground(Color.BLUE);
+                    buttons[ind].setBackground(Color.BLUE);
+                    buttons[ind].setEnabled(false);
 				}
 				else if(x == 3 && y == 4){
-					button.setBackground(Color.YELLOW);
+                    buttons[ind].setBackground(Color.YELLOW);
+                    buttons[ind].setEnabled(false);
 				}
 				else if(x == 4 && y == 4){
-					button.setBackground(Color.GREEN);
+                    buttons[ind].setBackground(Color.GREEN);
+                    buttons[ind].setEnabled(false);
 				}
 				else{
-					button.setBackground(Color.BLACK);
+                    buttons[ind].setBackground(Color.BLACK);
 				}
-				button.addActionListener(this);
-				c.add(button);
+				c.add(buttons[ind]);
+			}
+		}
+
+		lb = new JLabel("It is ROOD's turn");
+		validMoveLabel = new JLabel("");
+		
+		new RolitController(buttons, game, replay);
+		
+		c.add(lb);
+		c.add(validMoveLabel);
+		setSize(800,900); 
+		setVisible(true);
+		
+		replay = new JButton("New Game?");
+		replay.setEnabled(false);
+		c.add(replay);
+		
+		game.addObserver(this);
+	}
+	
+	
+	
+	public void update(Observable o, Object arg) {
+		Board board = ((Game)o).getBoard();
+		Mark1 mark = ((Game)o).getCurrentMark();
+		
+		for (int x = 0; x < Board.DIM; x++){
+			for(int y = 0; y < Board.DIM; y++){
+				buttons[Board.index(x, y)].setBackground(board.toColor(board.getField(x, y)));
+			}
+		}
+		if (board.hasWinner() && board.isFull()){
+			lb.setText(board.getWinner());
+			
+			replay.setEnabled(true);
+			
+			for (int x = 0; x < Board.DIM; x++){
+				for (int y = 0; y < Board.DIM; y++){
+					buttons[Board.index(x, y)].setEnabled(false);
+				}
+			}
+		}
+		else{
+			lb.setText("It's " + board.toString(mark) + "turn");
+			for (int x = 0; x < Board.DIM; x++){
+				for(int y = 0; y < Board.DIM; y++){
+					Color k = ((AbstractButton) buttons[Board.index(x, y)]).getBackground();
+					if(!k.equals(Color.BLACK)){
+						
+						buttons[Board.index(x, y)].setEnabled(false);
+					}
+					else{
+						buttons[Board.index(x, y)].setEnabled(true);
+					}
+				}
 			}
 		}
 		
- 
-		c.add(lb);
-		setSize(800,900); 
-		setVisible(true);
-	}
-	
-	public void actionPerformed(ActionEvent ev){
-		Object active = ev.getSource();
-		Color k = ((AbstractButton) active).getBackground();
-		if(k.equals(Color.BLACK) && Game.NUMBER_PLAYERS > 1 && Game.NUMBER_PLAYERS < 5){
-			if(m.equals(Mark1.ROOD)){
-				kleur = Color.RED;
-			}
-			else if(m.equals(Mark1.GEEL)){
-				kleur = Color.YELLOW;
-			}
-			else if(m.equals(Mark1.GROEN)){
-				kleur = Color.GREEN;
-			}
-			else if(m.equals(Mark1.BLAUW)){
-				kleur = Color.BLUE;
-			}
-			lb.setText("It is " + m.next(Game.NUMBER_PLAYERS) + "'s turn");
-			((AbstractButton) active).setBackground(kleur);
-			m = m.next(Game.NUMBER_PLAYERS);
-		}	
 	}
 	
 	static public void main(String[] args) {
-	    new GUI(); 
-	    
+	    Game game = new Game();
+	    new GUI(game);  
 	}
 }
