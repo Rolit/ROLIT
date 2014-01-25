@@ -1,9 +1,11 @@
 package rolit;
 
+import java.awt.Color;
+import java.util.AbstractCollection;
 import java.util.LinkedList;
 
 public class Board {
-	// start: 3,3 rood		4,3 geel	3,4 blauw		4,4 groen
+	// start: 3,3 rood		3,4 geel	4,3 blauw		4,4 groen
 	// col = x-as   en   row = y-as
 	// 2 spelers: rood, groen
 	// 3 spelers: rood, geel, groen
@@ -18,6 +20,7 @@ public class Board {
 	private Mark1[] fields;
 	LinkedList<LinkedList<Integer>> aanliggendeVelden = new LinkedList<LinkedList<Integer>>();
 	LinkedList<LinkedList<Integer>> veldenMetSlaMogelijkheid = new LinkedList<LinkedList<Integer>>();
+	LinkedList<LinkedList<Integer>> mogelijkeSet = new LinkedList<LinkedList<Integer>>();
 
 	
 	// -- Constructors -----------------------------------------------
@@ -32,8 +35,8 @@ public class Board {
     requires 0 <= col & col < DIM;
 	*/
 	// returnt een index voor de velden van boven naar beneden van links naar rechts
-	public int index (int col, int row){
-		return DIM * col + row;
+	public static int index (int col, int row){
+		return DIM * row + col;
 	}
 	
 	// returnt true als veld bestaat
@@ -85,7 +88,46 @@ public class Board {
 		return isFull();
 	}
 	
-	// 
+	//create Color for coloring the fields
+	public Color toColor(Mark1 mark){
+		Color kleur = Color.BLACK;
+			if (mark.equals(Mark1.ROOD)){
+				kleur = Color.RED;
+			}
+			else if (mark.equals(Mark1.GEEL)){
+				kleur = Color.YELLOW;
+			}
+			else if (mark.equals(Mark1.GROEN)){
+				kleur = Color.GREEN;
+			}
+			else if (mark.equals(Mark1.BLAUW)){
+				kleur = Color.BLUE;
+			}
+			else if (mark.equals(Mark1.EMPTY)){
+				kleur = Color.BLACK;
+			}
+		return kleur;
+	}
+	
+	public String toString(Mark1 mark){
+		String stringMark = null;
+		if (mark.equals(Mark1.ROOD)){
+			stringMark = "ROOD";
+		}
+		else if (mark.equals(Mark1.GEEL)){
+			stringMark = "GEEL";
+		}
+		else if (mark.equals(Mark1.GROEN)){
+			stringMark = "GROEN";
+		}
+		else if (mark.equals(Mark1.BLAUW)){
+			stringMark = "BLAUW";
+		}
+		else if (mark.equals(Mark1.EMPTY)){
+			stringMark = "EMPTY";
+		}
+		return stringMark;
+	}
 	
 	
 	public boolean isWinner(Mark1 m){
@@ -111,6 +153,35 @@ public class Board {
 		return winner;
 	}
 	
+	public String getWinner(){
+		LinkedList<String> winnersList = new LinkedList<String>();
+		String winner1 = null;
+		String winners = null;
+		if(hasWinner()){
+			if (isWinner(Mark1.ROOD)){
+				winnersList.add("ROOD");
+			}
+			if (isWinner(Mark1.GEEL)){
+				winnersList.add("GEEL");
+			}
+			if (isWinner(Mark1.GROEN)){
+				winnersList.add("GROEN");
+			}
+			if (isWinner(Mark1.BLAUW)){
+				winnersList.add("BLAUW");
+			}
+		}
+		
+		winner1 = winnersList + "is the winner!";
+		winners = winnersList + "are the winners!";
+		
+		if (winnersList.size() > 1){
+			winner1 = winners;
+		}
+		
+		return winner1;
+	}
+	
 	public boolean hasWinner(){
 		return isWinner(Mark1.ROOD) || isWinner(Mark1.GEEL) || isWinner(Mark1.GROEN) || isWinner(Mark1.BLAUW);
 	}
@@ -120,26 +191,13 @@ public class Board {
 	public boolean isValidMove(int col, int row, Mark1 m){
 		boolean validMove = false;
 		activeFields(m);
-		if(veldenMetSlaMogelijkheid.size() == 0){
-			for (int i = 0; i < aanliggendeVelden.size(); i++){
-				LinkedList<Integer> colRow1 = new LinkedList<Integer>();
-				colRow1 = aanliggendeVelden.get(i);
-				int x = colRow1.get(0);
-				int y = colRow1.get(1);
-				if (col == x && row == y){
-					validMove = true;
-				}
-			}
-		}
-		else{
-			for (int i = 0; i < veldenMetSlaMogelijkheid.size(); i++){
-				LinkedList<Integer> colRow = new LinkedList<Integer>();
-				colRow = veldenMetSlaMogelijkheid.get(i);
-				int x = colRow.get(0);
-				int y = colRow.get(1);
-				if (col == x && row == y){
-					validMove = true;
-				}
+		for (int i = 0; i < veldenMetSlaMogelijkheid.size(); i++){
+			LinkedList<Integer> colRow = new LinkedList<Integer>();
+			colRow = veldenMetSlaMogelijkheid.get(i);
+			int x = colRow.get(0);
+			int y = colRow.get(1);
+			if (col == x && row == y){
+				validMove = true;
 			}
 		}
 		return !isFull() && isEmptyField(col, row) && validMove ;
@@ -153,8 +211,8 @@ public class Board {
 			}
 		}
 		setField(3, 3, Mark1.ROOD);
-		setField(4, 3, Mark1.GEEL);
-		setField(3, 4, Mark1.BLAUW);
+		setField(3, 4, Mark1.GEEL);
+		setField(4, 3, Mark1.BLAUW);
 		setField(4, 4, Mark1.GROEN);
 	}
 
@@ -266,8 +324,8 @@ public class Board {
 						empty = false;
 						// naar links boven
 						if (x > 1 && y > 1 && !isEmptyField(x - 1, y - 1) && getField(x - 1, y - 1) != m){
+							int row = y - 2;
 							for (int col = x - 2; col >= 0 && !empty; col = col - 1){
-								int row = y - 2;
 								if (getField(col, row) == m){
 									moetSlaan = true;
 								}
@@ -280,8 +338,9 @@ public class Board {
 						empty = false;
 						// naar links onder
 						if (x > 1 && y < DIM - 2 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
-							for (int col = x - 2; col >= 0 && !empty; col = col - 1){
-								int row = y + 2;
+							int row = y + 2;
+							for (int col = x - 2; col >= 0 && !empty && y < DIM; col--){
+								
 								if (getField(col, row) == m){
 									moetSlaan = true;
 								}
@@ -294,22 +353,24 @@ public class Board {
 						empty = false;
 						//naar rechts boven
 						if (x < DIM - 2 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
-							for (int col = x + 2; col < DIM && !empty; col++){
-								int row = y - 2;
+							int row = y - 2;
+							for (int col = x + 2; col < DIM && !empty ; col++){
+								
 								if (getField(col, row) == m){
 									moetSlaan = true;
 								}
 								else if(isEmptyField(col, row)){
 									empty = true;
 								}
-								row = row - 1;
+								row--;
 							}
 						}
 						empty = false;
 						// naar rechts onder
 						if (x < DIM - 2 && y < DIM - 2 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
-							for (int col = x + 2; col < DIM && !empty; col++){
 							int row = y + 2;
+							for (int col = x + 2; col < DIM && !empty; col++){
+							
 								if (getField(col, row) == m){
 									moetSlaan = true;
 								}
@@ -332,11 +393,17 @@ public class Board {
 				}
 			}
 		}
-		return  veldenMetSlaMogelijkheid;
+		if (veldenMetSlaMogelijkheid.size() == 0){
+			mogelijkeSet = aanliggendeVelden;
+		}
+		else{ 
+			mogelijkeSet = veldenMetSlaMogelijkheid;
+		}
+		return  mogelijkeSet;
 	}	
 	
 	public void recolorFields(int x, int y, Mark1 m){
-		if(isValidMove(x, y, m)){
+		//if(isValidMove(x, y, m)){
 			boolean empty = false;
 			boolean maakSlag = false;
 			// kijken of er ergens boven een veld met mijn kleur aanwezig is
@@ -356,6 +423,8 @@ public class Board {
 					}
 				}
 			}	
+			empty = false;
+			maakSlag = false;
 			// kijken of ergens naar beneden een veld met mijn kleur aanwezig is
 					
 			if (y < DIM - 2 && !isEmptyField(x, y + 1) && getField(x, y + 1) != m){
@@ -434,7 +503,7 @@ public class Board {
 					int row1 = y;
 					for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
 						setField(col1, row1, m);
-						row1 = row - 1;
+						row1 = row1 - 1;
 					}
 				}
 			}
@@ -442,10 +511,10 @@ public class Board {
 			empty = false;
 			maakSlag = false;
 			// naar links onder
-			if (x > 1 && y > 1 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
+			if (x > 1 && y < DIM - 2 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
 				int col = x - 2;
 				int row = y + 2;
-				for (col = x - 2; col >= 0 && !empty && !maakSlag; col = col - 1){
+				for (col = x - 2; col >= 0 && !empty && !maakSlag && row < DIM; col--){
 					if (getField(col, row) == m){
 						maakSlag = true;
 					}
@@ -456,7 +525,7 @@ public class Board {
 				}
 				if (maakSlag && !empty){
 					int row1 = y;
-					for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
+					for(int col1 = x; col1 > col && !empty; col1--){
 						setField(col1, row1, m);
 						row1++;
 					}
@@ -465,33 +534,9 @@ public class Board {
 			empty = false;
 			maakSlag = false;
 			//naar rechts boven
-			if (x > 1 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
+			if (x < DIM - 2 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
 				int col = x + 2;
 				int row = y - 2;
-				for (col = x + 2; col < DIM && !empty && !maakSlag; col = col + 1){
-					if (getField(col, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, row)){
-						empty = true;
-					}
-					row = row - 1;
-				}
-				if (maakSlag){
-					int row1 = y;
-					for(int col1 = x; col1 < col && !empty; col1++){
-						setField(col1, row1, m);
-						row1 = row1 - 1;
-					}
-				}
-			}
-						
-			empty = false;
-			maakSlag = false;
-			// naar rechts onder
-			if (x > 1 && y > 1 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
-				int col = x + 2;
-				int row = y + 2;
 				for (col = x + 2; col < DIM && !empty && !maakSlag; col++){
 					if (getField(col, row) == m){
 						maakSlag = true;
@@ -499,19 +544,43 @@ public class Board {
 					else if(isEmptyField(col, row)){
 						empty = true;
 					}
-					row = row + 1;
+					row--;
+				}
+				if (maakSlag){
+					int row1 = y;
+					for(int col1 = x; col1 < col && !empty; col1++){
+						setField(col1, row1, m);
+						row1--;
+					}
+				}
+			}
+						
+			empty = false;
+			maakSlag = false;
+			// naar rechts onder
+			if (x < DIM - 2 && y < DIM - 2 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
+				int col = x + 2;
+				int row = y + 2;
+				for (col = x + 2; col < DIM && !empty && !maakSlag && row < DIM; col++){
+					if (getField(col, row) == m){
+						maakSlag = true;
+					}
+					else if(isEmptyField(col, row)){
+						empty = true;
+					}
+					row++;
 				}
 				if (maakSlag && !empty){
 					int row1 = y;
 					for(int col1 = x; col1 < col && !empty; col1++){
 						setField(col1, row1, m);
-						row1 ++;
+						row1++;
 					}
 				}
 			}
 			empty = false;
 			maakSlag = false;
-		}
+		//}
 	}
 }
 
