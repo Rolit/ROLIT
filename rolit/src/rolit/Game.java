@@ -1,8 +1,10 @@
 package rolit;
 
+import java.util.LinkedList;
+import java.util.Observable;
 import java.util.Scanner;
 
-public class Game {
+public class Game extends Observable{
 	// -- Instance variables -----------------------------------------
 
     public static final int NUMBER_PLAYERS = 4;
@@ -11,16 +13,21 @@ public class Game {
     
     private Player[] players;
     
-    private int current;
+    private Mark1 currentMark;
+    
+    private int currentPlayer;
+    private Player s0;
+    private Player s1;
     
     // -- Constructors -----------------------------------------------
     
-    public Game(Player s0, Player s1) {
+    public Game() {
         board = new Board();
         players = new Player[NUMBER_PLAYERS];
         players[0] = s0;
         players[1] = s1;
-        current = 0;
+        currentMark = Mark1.ROOD;
+        currentPlayer = 0;
     }
     
     // -- Commands ---------------------------------------------------
@@ -45,16 +52,21 @@ public class Game {
         return answer.equals(yes);
     }
     
-    private void reset() {
-        current = 0;
+    public void reset() {
+        currentPlayer = 0;
+        currentMark = Mark1.ROOD;
         board.reset();
+        
+        setChanged();
+        notifyObservers();
     }
     
-    private void play() {
+    public void play() {
         update();
         while (!board.gameOver()) {
-            players[current].makeMove(board);
-            current = (current + 1) % NUMBER_PLAYERS;
+            players[currentPlayer].makeMove(board);
+            currentPlayer = (currentPlayer + 1) % NUMBER_PLAYERS;
+            currentMark = currentMark.next(NUMBER_PLAYERS);
             update();
         }
         printResult();
@@ -75,6 +87,37 @@ public class Game {
             System.out.println("Draw. There is no winner!");
         }
     }
-
+    
+    public Board getBoard(){
+    	return board;
+    }
+    
+    public Mark1 getCurrentMark(){
+    	return currentMark;
+    }
+    
+    public void takeTurn(int x, int y){
+    	board.activeFields(currentMark);
+    	
+    	for (int i = 0; i < board.mogelijkeSet.size(); i++){
+    		LinkedList<Integer> coordinaat = new LinkedList<Integer>();
+    		coordinaat = board.mogelijkeSet.get(i);
+    		int x1 = coordinaat.get(0);
+    		int y1 = coordinaat.get(1);
+    		if( x == x1 && y == y1){
+    			board.setField(x, y, currentMark);
+    			board.recolorFields(x, y, currentMark);
+    			currentMark = currentMark.next(NUMBER_PLAYERS);
+    			
+    		}
+    		else{
+ 
+    		}
+    		
+    	}
+    	
+    	setChanged();
+    	notifyObservers();
+    }
     
 }
