@@ -1,7 +1,6 @@
 package rolit;
 
 import java.awt.Color;
-import java.util.AbstractCollection;
 import java.util.LinkedList;
 
 public class Board {
@@ -36,7 +35,7 @@ public class Board {
 	*/
 	// returnt een index voor de velden van boven naar beneden van links naar rechts
 	public static int index (int col, int row){
-		return DIM * row + col;
+		return DIM * col + row;
 	}
 	
 	// returnt true als veld bestaat
@@ -325,7 +324,7 @@ public class Board {
 						// naar links boven
 						if (x > 1 && y > 1 && !isEmptyField(x - 1, y - 1) && getField(x - 1, y - 1) != m){
 							int row = y - 2;
-							for (int col = x - 2; col >= 0 && !empty; col = col - 1){
+							for (int col = x - 2; col >= 0 && !empty && row >= 0; col = col - 1){
 								if (getField(col, row) == m){
 									moetSlaan = true;
 								}
@@ -339,7 +338,7 @@ public class Board {
 						// naar links onder
 						if (x > 1 && y < DIM - 2 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
 							int row = y + 2;
-							for (int col = x - 2; col >= 0 && !empty && y < DIM; col--){
+							for (int col = x - 2; col >= 0 && !empty && row < DIM; col--){
 								
 								if (getField(col, row) == m){
 									moetSlaan = true;
@@ -354,7 +353,7 @@ public class Board {
 						//naar rechts boven
 						if (x < DIM - 2 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
 							int row = y - 2;
-							for (int col = x + 2; col < DIM && !empty ; col++){
+							for (int col = x + 2; col < DIM && !empty && row >= 0; col++){
 								
 								if (getField(col, row) == m){
 									moetSlaan = true;
@@ -369,7 +368,7 @@ public class Board {
 						// naar rechts onder
 						if (x < DIM - 2 && y < DIM - 2 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
 							int row = y + 2;
-							for (int col = x + 2; col < DIM && !empty; col++){
+							for (int col = x + 2; col < DIM && !empty && row < DIM; col++){
 							
 								if (getField(col, row) == m){
 									moetSlaan = true;
