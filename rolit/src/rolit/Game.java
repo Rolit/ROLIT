@@ -6,11 +6,8 @@ import java.util.Scanner;
 
 public class Game extends Observable{
 	// -- Instance variables -----------------------------------------
-
-    public static final int NUMBER_PLAYERS = 4;
-    
     private Board board;
-    
+    public static int NUMBER_PLAYERS = 2;
     private Player[] players;
     
     private Mark1 currentMark;
@@ -18,6 +15,7 @@ public class Game extends Observable{
     private int currentPlayer;
     private Player s0;
     private Player s1;
+    
     
     // -- Constructors -----------------------------------------------
     
@@ -31,8 +29,8 @@ public class Game extends Observable{
     }
     
     // -- Commands ---------------------------------------------------
-    
-    public void start() {
+
+	public void start() {
         boolean doorgaan = true;
         while (doorgaan) {
             reset();
