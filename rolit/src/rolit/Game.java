@@ -15,6 +15,9 @@ public class Game extends Observable{
     private int currentPlayer;
     private Player s0;
     private Player s1;
+    private Player s2;
+    private Player s3;
+    public String notValidMoveString;
     
     
     // -- Constructors -----------------------------------------------
@@ -24,6 +27,13 @@ public class Game extends Observable{
         players = new Player[NUMBER_PLAYERS];
         players[0] = s0;
         players[1] = s1;
+        if( players.length == 3){
+        	players[2] = s2; 
+        }
+        else if(players.length == 4){
+        	players[2] = s2;
+        	players[3] = s3;
+        }
         currentMark = Mark1.ROOD;
         currentPlayer = 0;
     }
@@ -109,7 +119,6 @@ public class Game extends Observable{
     			
     		}
     		else{
- 
     		}
     		
     	}
