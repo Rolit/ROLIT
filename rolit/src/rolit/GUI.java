@@ -1,34 +1,27 @@
 package rolit;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.*;
-
 import java.util.Observable;
 import java.util.Observer;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame implements Observer, ActionListener{
+public class GUI extends JFrame implements Observer {
 	
 	// -- Instance variables -----------------------------------------
 
 	private JLabel  lb;
 	public JLabel validMoveLabel;
-	
 	private JButton[] buttons;
 	private JButton replay;
-	private JButton startButton;
-	private JComboBox<String> numberChooser;
+
 	Game game = new Game();
-	private JFrame startFrame;
 	
 	// -- Constructors -----------------------------------------------
 	
 	public GUI(Game game) {
 	    super("GUI");
-	    startFrame();
+	    init(game);
 	}
 	
 	// -- Commands ---------------------------------------------------
@@ -40,54 +33,6 @@ public class GUI extends JFrame implements Observer, ActionListener{
 		game.addObserver(this);
 	}
 	
-	public void startFrame(){
-		startFrame = new JFrame();
-		startFrame.setLayout(new BorderLayout());
-		startFrame.add(numberPlayers(), BorderLayout.NORTH);
-		startFrame.add(startPanel(), BorderLayout.SOUTH);
-		startFrame.setSize(400,150);
-		startFrame.setVisible(true);
-		
-	}
-	
-	public JPanel startPanel(){
-		startButton = new JButton("Start Game");
-		JPanel startPanel = new JPanel();
-		startPanel.add(startButton);
-		startButton.addActionListener(this);
-		
-		return startPanel;
-	}
-	
-	public JPanel numberPlayers(){
-		numberChooser = new JComboBox<String>();
-		
-		numberChooser.addItem("2 spelers");
-		numberChooser.addItem("3 spelers");
-		numberChooser.addItem("4 spelers");
-		
-		numberChooser.addActionListener(this);
-		JPanel numberPlayers = new JPanel();
-		numberPlayers.add(numberChooser);
-		numberPlayers.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black), "Choose number of Players"));
-		return numberPlayers;
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-		if(numberChooser.getSelectedItem() == "2 spelers"){
-			Game.NUMBER_PLAYERS = 2;
-		}
-		else if(numberChooser.getSelectedItem() == "3 spelers"){
-			Game.NUMBER_PLAYERS = 3;
-		}
-		else if(numberChooser.getSelectedItem() == "4 spelers"){
-			Game.NUMBER_PLAYERS = 4;
-		}
-		if(e.getSource() == startButton){
-			init(game);
-			startFrame.dispose();
-		}
-	}
 	
 	public void rolitFrame(){
 		JFrame rolitFrame = new JFrame();
@@ -104,15 +49,15 @@ public class GUI extends JFrame implements Observer, ActionListener{
 		commentPanel.setLayout(new GridLayout(0,1));
 		
 		lb = new JLabel("It is ROOD's turn");
-		validMoveLabel = new JLabel("");
 		
 		commentPanel.add(lb);
-		commentPanel.add(validMoveLabel);
+		JPanel innerPanel = new JPanel();
 		
 		
 		replay = new JButton("New Game?");
 		replay.setEnabled(false);
-		commentPanel.add(replay);
+		innerPanel.add(replay);
+		commentPanel.add(innerPanel);
 		return commentPanel;
 	}
 
@@ -153,6 +98,8 @@ public class GUI extends JFrame implements Observer, ActionListener{
 	public void update(Observable o, Object arg) {
 		Board board = ((Game)o).getBoard();
 		Mark1 mark = ((Game)o).getCurrentMark();
+		
+		
 		
 		for (int x = 0; x < Board.DIM; x++){
 			for(int y = 0; y < Board.DIM; y++){
