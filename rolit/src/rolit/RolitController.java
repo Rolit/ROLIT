@@ -10,6 +10,7 @@ public class RolitController implements ActionListener{
 	JButton[] buttons;
 	Board board;
 	
+	
 	public RolitController(JButton[] buttons, Game game, JButton replay){
 		this.replay = replay;
 		this.game = game;
@@ -17,8 +18,9 @@ public class RolitController implements ActionListener{
 		for(int x = 0; x < buttons.length; x++){
 			buttons[x].addActionListener(this);
 		}
-		replay = new JButton();
-		replay.addActionListener(this);
+		
+		this.replay = replay;
+		this.replay.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent ae) {
