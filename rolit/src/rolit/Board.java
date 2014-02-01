@@ -402,213 +402,182 @@ public class Board {
 	}	
 	
 	public void recolorFields(int x, int y, Mark1 m){
-		//if(isValidMove(x, y, m)){
-			boolean empty = false;
-			boolean maakSlag = false;
-			// kijken of er ergens boven een veld met mijn kleur aanwezig is
-			if (y > 1 && !isEmptyField(x, y - 1) && getField(x, y - 1) != m){
-				int row = y - 2;
-				for (row = y - 2; row >= 0 && !empty && !maakSlag; row = row - 1){
-					if(getField(x, row) == m){
-							maakSlag = true;
-					}
-					else if(isEmptyField(x, row)){
-						empty = true;
-					}
+		boolean empty = false;
+		boolean maakSlag = false;
+		// kijken of er ergens boven een veld met mijn kleur aanwezig is
+		if (y > 1 && !isEmptyField(x, y - 1) && getField(x, y - 1) != m){
+			int row = y - 2;
+			for (row = y - 2; row >= 0 && !empty && !maakSlag; row = row - 1){
+				if(getField(x, row) == m){
+					maakSlag = true;
 				}
-				if (maakSlag && !empty){
-					for(int row1 = y; row1 > row && !empty; row1 = row1 - 1){
-						setField(x, row1, m);
-					}
-				}
-			}	
-			empty = false;
-			maakSlag = false;
-			// kijken of ergens naar beneden een veld met mijn kleur aanwezig is
-					
-			if (y < DIM - 2 && !isEmptyField(x, y + 1) && getField(x, y + 1) != m){
-				int row = y + 2;
-				for (row = y + 2; row < DIM && !empty && !maakSlag; row++){
-					if (getField(x, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(x, row)){
-						empty = true;
-					}
-				}
-				if (maakSlag && !empty){
-					for(int row1 = y; row1 < row && !empty; row1++){
-						setField(x, row1, m);
-					}
+				else if(isEmptyField(x, row)){
+					empty = true;
 				}
 			}
-						
-			empty = false;
-			maakSlag = false;
-			// kijken of ergens naar links een veld met mijn kleur aanwezig is
-			if (x > 1 && !isEmptyField(x - 1, y) && getField(x - 1, y) != m){
-				int col = x - 2;
-				for (col = x - 2; col >= 0 && !empty && !maakSlag; col = col - 1){
-					if (getField(col, y) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, y)){
-						empty = true;
-					}
-				}
-				if (maakSlag && !empty){
-					for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
-						setField(col1, y, m);
-					}
+			if (maakSlag && !empty){
+				for(int row1 = y; row1 > row && !empty; row1 = row1 - 1){
+					setField(x, row1, m);
 				}
 			}
-						
-			empty = false;
-			maakSlag = false;
-			// kijken of ergens naar rechts een veld met mijn kleur aanwezig is
-			if (x < DIM - 2 && !isEmptyField(x + 1, y) && getField(x + 1, y) != m){
-				int col = x + 2;
-				for (col = x + 2; col < DIM && !empty && !maakSlag; col++){
-					if (getField(col, y) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, y)){
-						empty = true;
-					}
-				}
-				if (maakSlag && !empty){
-					for(int col1 = x; col1 < col && !empty; col1++){
-						setField(col1, y, m);
-					}
-				}
-			}
+		}	
+		empty = false;
+		maakSlag = false;
+		// kijken of ergens naar beneden een veld met mijn kleur aanwezig is
 				
-			empty = false;
-			maakSlag = false;
-			// naar links boven
-			if (x > 1 && y > 1 && !isEmptyField(x - 1, y - 1) && getField(x - 1, y - 1) != m){
-				int col = x - 2;
-				int row = y - 2;
-				for (col = x - 2; col >= 0 && !empty && !maakSlag; col = col - 1){
-					if (getField(col, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, row)){
-						empty = true;
-					}
-					row = row - 1;
+		if (y < DIM - 2 && !isEmptyField(x, y + 1) && getField(x, y + 1) != m){
+			int row = y + 2;
+			for (row = y + 2; row < DIM && !empty && !maakSlag; row++){
+				if (getField(x, row) == m){
+					maakSlag = true;
 				}
-				if (maakSlag && !empty){
-					int row1 = y;
-					for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
-						setField(col1, row1, m);
-						row1 = row1 - 1;
-					}
+				else if(isEmptyField(x, row)){
+					empty = true;
 				}
 			}
+			if (maakSlag && !empty){
+				for(int row1 = y; row1 < row && !empty; row1++){
+					setField(x, row1, m);
+				}
+			}
+		}
+					
+		empty = false;
+		maakSlag = false;
+		// kijken of ergens naar links een veld met mijn kleur aanwezig is
+		if (x > 1 && !isEmptyField(x - 1, y) && getField(x - 1, y) != m){
+			int col = x - 2;
+			for (col = x - 2; col >= 0 && !empty && !maakSlag; col = col - 1){
+				if (getField(col, y) == m){
+					maakSlag = true;
+				}
+				else if(isEmptyField(col, y)){
+					empty = true;
+				}
+			}
+			if (maakSlag && !empty){
+				for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
+					setField(col1, y, m);
+				}
+			}
+		}
+					
+		empty = false;
+		maakSlag = false;
+		// kijken of ergens naar rechts een veld met mijn kleur aanwezig is
+		if (x < DIM - 2 && !isEmptyField(x + 1, y) && getField(x + 1, y) != m){
+			int col = x + 2;
+			for (col = x + 2; col < DIM && !empty && !maakSlag; col++){
+				if (getField(col, y) == m){
+					maakSlag = true;
+				}
+				else if(isEmptyField(col, y)){
+					empty = true;
+				}
+			}
+			if (maakSlag && !empty){
+				for(int col1 = x; col1 < col && !empty; col1++){
+					setField(col1, y, m);
+				}
+			}
+		}
 			
-			empty = false;
-			maakSlag = false;
-			// naar links onder
-			if (x > 1 && y < DIM - 2 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
-				int col = x - 2;
-				int row = y + 2;
-				for (col = x - 2; col >= 0 && !empty && !maakSlag && row < DIM; col--){
-					if (getField(col, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, row)){
-						empty = true;
-					}
-					row++;
+		empty = false;
+		maakSlag = false;
+		// naar links boven
+		if (x > 1 && y > 1 && !isEmptyField(x - 1, y - 1) && getField(x - 1, y - 1) != m){
+			int col = x - 2;
+			int row = y - 2;
+			for (col = x - 2; col >= 0 && !empty && !maakSlag; col = col - 1){
+				if (getField(col, row) == m){
+					maakSlag = true;
 				}
-				if (maakSlag && !empty){
-					int row1 = y;
-					for(int col1 = x; col1 > col && !empty; col1--){
-						setField(col1, row1, m);
-						row1++;
-					}
+				else if(isEmptyField(col, row)){
+					empty = true;
+				}
+				row = row - 1;
+			}
+			if (maakSlag && !empty){
+				int row1 = y;
+				for(int col1 = x; col1 > col && !empty; col1 = col1 - 1){
+					setField(col1, row1, m);
+					row1 = row1 - 1;
 				}
 			}
-			empty = false;
-			maakSlag = false;
-			//naar rechts boven
-			if (x < DIM - 2 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
-				int col = x + 2;
-				int row = y - 2;
-				for (col = x + 2; col < DIM && !empty && !maakSlag; col++){
-					if (getField(col, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, row)){
-						empty = true;
-					}
-					row--;
+		}
+		
+		empty = false;
+		maakSlag = false;
+		// naar links onder
+		if (x > 1 && y < DIM - 2 && !isEmptyField(x - 1, y + 1) && getField(x - 1, y + 1) != m){
+			int col = x - 2;
+			int row = y + 2;
+			for (col = x - 2; col >= 0 && !empty && !maakSlag && row < DIM; col--){
+				if (getField(col, row) == m){
+					maakSlag = true;
 				}
-				if (maakSlag){
-					int row1 = y;
-					for(int col1 = x; col1 < col && !empty; col1++){
-						setField(col1, row1, m);
-						row1--;
-					}
+				else if(isEmptyField(col, row)){
+					empty = true;
+				}
+				row++;
+			}
+			if (maakSlag && !empty){
+				int row1 = y;
+				for(int col1 = x; col1 > col && !empty; col1--){
+					setField(col1, row1, m);
+					row1++;
 				}
 			}
-						
-			empty = false;
-			maakSlag = false;
-			// naar rechts onder
-			if (x < DIM - 2 && y < DIM - 2 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
-				int col = x + 2;
-				int row = y + 2;
-				for (col = x + 2; col < DIM && !empty && !maakSlag && row < DIM; col++){
-					if (getField(col, row) == m){
-						maakSlag = true;
-					}
-					else if(isEmptyField(col, row)){
-						empty = true;
-					}
-					row++;
+		}
+		empty = false;
+		maakSlag = false;
+		//naar rechts boven
+		if (x < DIM - 2 && y > 1 && !isEmptyField(x + 1, y - 1) && getField(x + 1, y - 1) != m){
+			int col = x + 2;
+			int row = y - 2;
+			for (col = x + 2; col < DIM && !empty && !maakSlag; col++){
+				if (getField(col, row) == m){
+					maakSlag = true;
 				}
-				if (maakSlag && !empty){
-					int row1 = y;
-					for(int col1 = x; col1 < col && !empty; col1++){
-						setField(col1, row1, m);
-						row1++;
-					}
+				else if(isEmptyField(col, row)){
+					empty = true;
+				}
+				row--;
+			}
+			if (maakSlag){
+				int row1 = y;
+				for(int col1 = x; col1 < col && !empty; col1++){
+					setField(col1, row1, m);
+					row1--;
 				}
 			}
-			empty = false;
-			maakSlag = false;
-		//}
+		}
+					
+		empty = false;
+		maakSlag = false;
+		// naar rechts onder
+		if (x < DIM - 2 && y < DIM - 2 && !isEmptyField(x + 1, y + 1) && getField(x + 1, y + 1) != m){
+			int col = x + 2;
+			int row = y + 2;
+			for (col = x + 2; col < DIM && !empty && !maakSlag && row < DIM; col++){
+				if (getField(col, row) == m){
+					maakSlag = true;
+				}
+				else if(isEmptyField(col, row)){
+					empty = true;
+				}
+				row++;
+			}
+			if (maakSlag && !empty){
+				int row1 = y;
+				for(int col1 = x; col1 < col && !empty; col1++){
+					setField(col1, row1, m);
+					row1++;
+				}
+			}
+		}
+		
+		empty = false;
+		maakSlag = false;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

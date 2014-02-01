@@ -1,12 +1,17 @@
 package rolit;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.net.InetAddress;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 import javax.swing.BorderFactory;
@@ -23,17 +28,26 @@ public class Start implements ActionListener {
 	
 	private JRadioButton humanButton;
 	private JRadioButton computerButton;
-	private JTextField nameField;
+	public JTextField nameField;
 	private JComboBox<String> strategyChooser;
 	private JButton startButton;
 	private JComboBox<String> numberChooser;
 	private JFrame startFrame;
-	private JTextField tfPort;
 	private JButton okButton;
 	private JFrame errorFrame;
 	private Color kleur;
+	private Socket socket;
+	private JTextField tfPort;
+	private JTextField tfAddress;
+	private JPanel card1;
+	private JPanel card2;
+	private JPanel switchPanel;
+	private JFrame errorFrameStart;
+	private JButton okStartErrorButton;
 	Game game = new Game();
 	
+	// -- Constructors -----------------------------------------------
+    
 	public Start(){
 		startFrame();
 	}
@@ -45,14 +59,11 @@ public class Start implements ActionListener {
 		startFrame.add(startPanel(), BorderLayout.SOUTH);
 		startFrame.add(ipAdresServerPoortPanel(), BorderLayout.WEST);
 		startFrame.add(humanComputerPlayerPanel(), BorderLayout.CENTER);
-//		startFrame.add(namePanel(), BorderLayout.EAST);
-		startFrame.add(strategyPanel(), BorderLayout.EAST);
+		startFrame.add(switchingPanel(), BorderLayout.EAST);
 		startFrame.setSize(600,220);
 		startFrame.setVisible(true);
-		
 	}
 
-	
 	public JPanel strategyPanel(){
 		strategyChooser = new JComboBox<String>();
 		strategyChooser.addItem("Naive");
@@ -82,12 +93,22 @@ public class Start implements ActionListener {
 		return namePanel;
 	}
 	
+	private JPanel switchingPanel(){
+		switchPanel = new JPanel(new CardLayout());
+		card2 = strategyPanel();
+		card1 = namePanel();
+		switchPanel.add(card1, "NamePanel");
+		switchPanel.add(card2, "StrategyPanel");
+		return switchPanel;
+	}
+	
 	public JPanel humanComputerPlayerPanel(){
 		JPanel humanComputerPlayerPanel = new JPanel();
 		humanComputerPlayerPanel.setLayout(new GridLayout(2,1));
 		
 		humanButton = new JRadioButton("Human player");
 		humanButton.setActionCommand("human");
+		humanButton.setSelected(true);
 		humanButton.addActionListener(this);
 		
 		computerButton = new JRadioButton("Computer player");
@@ -109,11 +130,11 @@ public class Start implements ActionListener {
 			JPanel pp = new JPanel(new GridLayout(2, 2));
 
 			JLabel lbAddress = new JLabel("Address: ");
-			JTextField tfAddress = new JTextField(getHostAddress(), 9);
-			tfAddress.setEditable(false);
+			tfAddress = new JTextField("localhost", 9);
+			tfAddress.setEditable(true);
 
 			JLabel lbPort = new JLabel("Port:");
-			tfPort = new JTextField("2727", 5);
+			tfPort = new JTextField("5555", 5);
 
 			pp.add(lbAddress);
 			pp.add(tfAddress);
@@ -125,17 +146,8 @@ public class Start implements ActionListener {
 			return pp;
 	}
 	
-	private String getHostAddress() {
-		try {
-			InetAddress iaddr = InetAddress.getLocalHost();
-			return iaddr.getHostAddress();
-		} catch (UnknownHostException e) {
-			return "?unknown?";
-		}
-	}
-	
 	public JPanel startPanel(){
-		startButton = new JButton("Start Game");
+		startButton = new JButton("Connect");
 		JPanel startPanel = new JPanel();
 		startPanel.add(startButton);
 		startButton.addActionListener(this);
@@ -159,6 +171,7 @@ public class Start implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
+		CardLayout cl = (CardLayout)(switchPanel.getLayout());
 		if(numberChooser.getSelectedItem() == "2 spelers"){
 			Game.NUMBER_PLAYERS = 2;
 		}
@@ -169,33 +182,77 @@ public class Start implements ActionListener {
 			Game.NUMBER_PLAYERS = 4;
 		}
 		if(ae.getActionCommand().equals("human")){
-			kleur = Color.red;
-			
+			nameField.setText("");
+			cl.show(switchPanel, "NamePanel");
 		}
 		else if(ae.getActionCommand().equals("computer")){
-			kleur = Color.yellow;
+			nameField.setText("Computer");
+			cl.show(switchPanel, "StrategyPanel");
 		}
 
 		if(ae.getSource() == startButton){
-			int port = 0;
-			int max = 0;
-
-			try {
-				port = Integer.parseInt(tfPort.getText());
-			} catch (NumberFormatException e) {
-				errorFrame();
-				
-				return;
+			String hostName = tfAddress.getText();
+			int portNumber = 0;
+			if(nameField.getText().equals("")){
+					errorFrameStart();
 			}
-			
-			tfPort.setEditable(false);
-			GUI gui = new GUI(game);
-			startFrame.dispose();
-			
+			else{
+				try{
+					portNumber = Integer.parseInt(tfPort.getText());
+					
+					try {
+						socket = new Socket(hostName, portNumber);
+						System.out.println("ik open nu een socket!");
+						PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+					    BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+					    
+					    String line;
+					    
+					    int opties = 0;
+					    int versie = 35;
+						out.println("hello " + nameField.getText() + " " + opties + " " + versie);
+					    while ((line = in.readLine()) != null) {
+					        System.out.println("Server: " + line);
+					        
+					        if (line.equals("Bye.")){
+					            break;
+					        }
+					    }
+					    tfPort.setEditable(false);
+					    startFrame.dispose();
+					    
+					} catch (UnknownHostException e) {
+						e.printStackTrace();
+					} catch (IOException eio) {
+						eio.printStackTrace();
+					}
+				
+				} catch (NumberFormatException e) {
+					errorFrame();
+					startFrame.setEnabled(false);
+				}
+			}
 		}
 		if(ae.getSource() == okButton){
 			errorFrame.dispose();
+			startFrame.setEnabled(true);
 		}
+		if(ae.getSource() == okStartErrorButton){
+			errorFrameStart.dispose();
+		}
+	}
+	
+	public JFrame errorFrameStart(){
+		errorFrameStart = new JFrame();
+		errorFrameStart.setLayout(new FlowLayout());
+		JLabel errorStartLabel = new JLabel("ERROR: no name entered");
+		errorFrameStart.add(errorStartLabel);
+		okStartErrorButton = new JButton("OK");
+		okStartErrorButton.addActionListener(this);
+		errorFrameStart.add(okStartErrorButton);
+		errorFrameStart.setVisible(true);
+		errorFrameStart.setSize(200, 100);
+		return errorFrameStart;
 	}
 	
 	public JFrame errorFrame(){

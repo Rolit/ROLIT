@@ -12,13 +12,13 @@ public class Game extends Observable{
     
     private Mark1 currentMark;
     
-    private int currentPlayer;
+    public int currentPlayer;
     private Player s0;
     private Player s1;
     private Player s2;
     private Player s3;
     public String notValidMoveString;
-    
+    LinkedList<LinkedList<Integer>> posmove;
     
     // -- Constructors -----------------------------------------------
     
@@ -105,8 +105,7 @@ public class Game extends Observable{
     }
     
     public void takeTurn(int x, int y){
-    	board.activeFields(currentMark);
-    	
+    	board.activeFields(getCurrentMark());
     	for (int i = 0; i < board.mogelijkeSet.size(); i++){
     		LinkedList<Integer> coordinaat = new LinkedList<Integer>();
     		coordinaat = board.mogelijkeSet.get(i);
@@ -127,4 +126,8 @@ public class Game extends Observable{
     	notifyObservers();
     }
     
+    public void hint(){
+    	posmove = board.activeFields(getCurrentMark());
+    }
+    	
 }

@@ -1,12 +1,16 @@
 package rolit;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
+
 import java.util.Observable;
 import java.util.Observer;
 
 @SuppressWarnings("serial")
-public class GUI extends JFrame implements Observer {
+public class GUI extends JFrame implements Observer, ActionListener {
 	
 	// -- Instance variables -----------------------------------------
 
@@ -14,6 +18,8 @@ public class GUI extends JFrame implements Observer {
 	public JLabel validMoveLabel;
 	private JButton[] buttons;
 	private JButton replay;
+	public JFrame rolitFrame;
+	private JButton hint;
 
 	Game game = new Game();
 	
@@ -29,13 +35,13 @@ public class GUI extends JFrame implements Observer {
 	public void init(Game game) {
 		
 		rolitFrame();
-		new RolitController(buttons, game, replay);
+		new RolitController(buttons, game, replay, hint);
 		game.addObserver(this);
 	}
 	
 	
 	public void rolitFrame(){
-		JFrame rolitFrame = new JFrame();
+		rolitFrame = new JFrame();
 		rolitFrame.setLayout(new BorderLayout());
 		rolitFrame.add(rolitPanel(), BorderLayout.CENTER);
 		rolitFrame.add(commentPanel(), BorderLayout.EAST);
@@ -52,12 +58,16 @@ public class GUI extends JFrame implements Observer {
 		
 		commentPanel.add(lb);
 		JPanel innerPanel = new JPanel();
-		
+		JPanel innerPanel2 = new JPanel();
+		hint = new JButton("hint");
 		
 		replay = new JButton("New Game?");
 		replay.setEnabled(false);
+		replay.addActionListener(this);
 		innerPanel.add(replay);
+		innerPanel2.add(hint);
 		commentPanel.add(innerPanel);
+		commentPanel.add(innerPanel2);
 		return commentPanel;
 	}
 
@@ -122,20 +132,31 @@ public class GUI extends JFrame implements Observer {
 			for (int x = 0; x < Board.DIM; x++){
 				for(int y = 0; y < Board.DIM; y++){
 					Color k = ((AbstractButton) buttons[Board.index(x, y)]).getBackground();
-					if(!k.equals(Color.BLACK)){
+					if(k.equals(Color.BLACK) || k.equals(Color.GRAY)){
 						
-						buttons[Board.index(x, y)].setEnabled(false);
+						buttons[Board.index(x, y)].setEnabled(true);
 					}
 					else{
-						buttons[Board.index(x, y)].setEnabled(true);
+						buttons[Board.index(x, y)].setEnabled(false);
 					}
 				}
 			}
 		}
 	}
 	
+	
+	
 	static public void main(String[] args) {
 	    Game game = new Game();
 	    new GUI(game);  
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		if(ae.getSource() == replay){
+			rolitFrame.dispose();
+			new Start();
+		}
+		
 	}
 }

@@ -2,8 +2,6 @@ package protocollen;
 
 import protocollen.ServerProtocol;
 import protocollen.ClientProtocol;
-import util.Strings;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintStream;

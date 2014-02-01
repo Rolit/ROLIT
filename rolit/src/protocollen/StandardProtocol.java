@@ -204,6 +204,11 @@ public class StandardProtocol {
 			  return false;
 		  }
 	  }
+
+	public String processInput(Object object) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	

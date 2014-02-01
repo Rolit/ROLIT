@@ -1,6 +1,7 @@
 package protocollen;
 
 import protocollen.StandardProtocol;
+
 import java.io.IOException;
 
 //Abstract class met alle constanten en methodes die gebruikt kunnen worden
@@ -129,6 +130,7 @@ public abstract class ServerProtocol extends StandardProtocol {
 	
 	//Commando om de client op de hoogte te stellen van een gebruiker die inlogt of weggaat
 	public abstract void online(String name, boolean isOnline) throws IOException;
+	
 }
 
 
